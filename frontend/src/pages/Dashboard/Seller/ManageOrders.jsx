@@ -1,6 +1,25 @@
+import { useQuery } from '@tanstack/react-query';
 import SellerOrderDataRow from '../../../components/Dashboard/TableRows/SellerOrderDataRow'
+import useAuth from '../../../hooks/useAuth'; 
+import LoadingSpinner from '../../../components/Shared/LoadingSpinner';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
 const ManageOrders = () => {
+
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
+
+  const { data: orders = [], isLoading } = useQuery({
+    queryKey: ['orders', user?.email],
+    queryFn: async () => {
+      const result = await axiosSecure(`/manage-orders/${user?.email}`);
+      return result.data;
+    }
+  })
+
+  if (isLoading) return <LoadingSpinner></LoadingSpinner>
+  console.log(orders);
+
   return (
     <>
       <div className='container mx-auto px-4 sm:px-8'>
@@ -38,12 +57,6 @@ const ManageOrders = () => {
                       scope='col'
                       className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
                     >
-                      Address
-                    </th>
-                    <th
-                      scope='col'
-                      className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
-                    >
                       Status
                     </th>
 
@@ -56,7 +69,9 @@ const ManageOrders = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <SellerOrderDataRow />
+                  {
+                    orders.map(order => <SellerOrderDataRow key={order._id} order={order} />)
+                  }
                 </tbody>
               </table>
             </div>

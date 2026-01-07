@@ -14,6 +14,10 @@ import MyInventory from '../pages/Dashboard/Seller/MyInventory'
 import ManageOrders from '../pages/Dashboard/Seller/ManageOrders'
 import MyOrders from '../pages/Dashboard/Customer/MyOrders'
 import { createBrowserRouter } from 'react-router'
+import PaymentSuccess from '../pages/Payment/PaymentSuccess'
+import SellerRequest from '../pages/Dashboard/Admin/SellerRequest'
+import SellerRoute from './SellerRoute'
+import AdminRoute from './AdminRoute'
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +32,10 @@ export const router = createBrowserRouter([
       {
         path: '/plant/:id',
         element: <PlantDetails />,
+      },
+      {
+        path: '/payment-success',
+        element: <PaymentSuccess />,
       },
     ],
   },
@@ -53,7 +61,9 @@ export const router = createBrowserRouter([
         path: 'add-plant',
         element: (
           <PrivateRoute>
-            <AddPlant />
+            <SellerRoute>
+              <AddPlant />
+            </SellerRoute>
           </PrivateRoute>
         ),
       },
@@ -61,7 +71,9 @@ export const router = createBrowserRouter([
         path: 'my-inventory',
         element: (
           <PrivateRoute>
-            <MyInventory />
+            <SellerRoute>
+              <MyInventory />
+            </SellerRoute>
           </PrivateRoute>
         ),
       },
@@ -69,7 +81,19 @@ export const router = createBrowserRouter([
         path: 'manage-users',
         element: (
           <PrivateRoute>
-            <ManageUsers />
+            <AdminRoute>
+              <ManageUsers />
+            </AdminRoute>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'seller-request',
+        element: (
+          <PrivateRoute>
+            <AdminRoute>
+              <SellerRequest />
+            </AdminRoute>
           </PrivateRoute>
         ),
       },
@@ -91,7 +115,13 @@ export const router = createBrowserRouter([
       },
       {
         path: 'manage-orders',
-        element: <ManageOrders />,
+        element: (
+        <PrivateRoute>
+          <SellerRoute>
+            <ManageOrders />
+          </SellerRoute>
+        </PrivateRoute>
+        ),
       },
     ],
   },
